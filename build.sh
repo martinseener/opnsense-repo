@@ -9,9 +9,9 @@ ROOT="$(cd "$(dirname "$0")" && pwd)"
 WORK="${ROOT}/work"
 PUBLIC="${ROOT}/public"
 REPO="${PUBLIC}/repo"
-# the build framework (Mk/, Templates/) of the official plugins
+# the build framework (Mk/, Templates/) of the official plugins; master would mark every package -devel
 PLUGINS_URL="https://github.com/opnsense/plugins"
-PLUGINS_REF="${PLUGINS_REF:-master}"
+PLUGINS_REF="${PLUGINS_REF:-stable/26.7}"
 
 rm -rf "${WORK}" "${PUBLIC}"
 mkdir -p "${WORK}/src" "${REPO}/All"
@@ -29,7 +29,7 @@ grep -v -e '^#' -e '^[[:space:]]*$' "${ROOT}/plugins.conf" | while read -r DIR U
 	mkdir -p "$(dirname "${WORK}/plugins/${DIR}")"
 	cp -R "${SRC}/${DIR}" "${WORK}/plugins/${DIR}"
 	# PHP and Python versions only go into informational metadata here
-	make -C "${WORK}/plugins/${DIR}" package PLUGIN_HASH="${HASH}" PLUGIN_PHP=84 PLUGIN_PYTHON=311
+	make -C "${WORK}/plugins/${DIR}" package PLUGIN_DEVEL= PLUGIN_HASH="${HASH}" PLUGIN_PHP=84 PLUGIN_PYTHON=311
 	cp "${WORK}/plugins/${DIR}"/work/pkg/*.pkg "${REPO}/All/"
 done
 
